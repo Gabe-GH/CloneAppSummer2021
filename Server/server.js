@@ -1,12 +1,36 @@
 const express = require('express');
-const app = express()
-const port = process.env.PORT || 3000
+const app = express();
+const bodyParser = require('body-parser');
+const port = process.env.PORT || 3000;
+
+const {MongoClient} = require('mongodb');
+const mongoose = require('mongoose');
+const Comment = require('../Mongo/Comments');
+
+const URI = require('../Mongo/config').URI;
+
+const comments = require('../Routes/API/comments');
+
+app.use(bodyParser.json());
+
+app.use('/comments', comments);
+
+mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(() => {
+        console.log(`MongoDB Connected...`);
+        return app.listen(port, () => {
+            console.log(`Server started on port ${port}`);
+        });
+    });
 
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-})
 
-app.listen(port, () => {
-    console.log(`Server listening at port ${port}`);
-})
+
+// app.get('/', async (req, res) => {
+//     const comment = await Comment.find();
+//     res.json(comment);
+// });
+
+// app.listen(port, () => {
+//     console.log(`Server listening at port ${port}`);
+// })
