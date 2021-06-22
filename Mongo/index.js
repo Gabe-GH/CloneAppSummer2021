@@ -1,7 +1,25 @@
 const {MongoClient} = require('mongodb');
-const { uri } = require("./config.js");
+const mongoose = require('mongoose');
+const Comments = require('./Comments');
 
-//const uri = 'mongodb+srv://classed:r945XJMmtne9BzL7@utrgvrmp.zsqqp.mongodb.net/sample_mflix?retryWrites=true&w=majority'
+const { URI } = require("./config.js");
+
+console.log(URI);
+
+mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true} );
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error: '));
+db.once('open', () => {
+    // we're connected!
+
+    Comments.find((err, comments) => {
+        if (err) return console.error(err);
+        console.log(comments);
+    });
+
+});
+
+/*
 
 async function main() {
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -25,3 +43,5 @@ async function listDatabases(client){
     console.log("Databases: ");
     databasesList.databases.forEach(db => console.log(` - ${db.name}`));
 }
+
+*/
