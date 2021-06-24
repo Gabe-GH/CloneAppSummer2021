@@ -4,13 +4,11 @@ const { model , Schema } = require('mongoose');
 
 const classSchema = new Schema({
     classDepartment: {
-        type: String,
-        required: true, 
+        type: String, 
         default: 'CSCI'
     },
     classSection: {
         type: Number,
-        required: true,
         default: 1000
     }
 })
@@ -19,18 +17,15 @@ const commentSchema = new Schema(
     {
         commentQuality: {
             type: Number,
-            required: true,
             default: 0.0
         },
         commentDifficulty: {
             type: Number,
-            required: true,
             default: 0.0
         },
         commentClass: classSchema,
         commentDate: {
             type: Date,
-            required: true,
             default: Date.now
         }
     }
