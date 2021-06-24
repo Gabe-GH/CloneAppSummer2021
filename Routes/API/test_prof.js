@@ -1,5 +1,5 @@
 const express = require('express');
-const Professors = require('../../Mongo/TestProfessors');
+const Professor = require('../../Mongo/TestProfessors');
 const router = express.Router();
 
 // Test Model
@@ -13,6 +13,14 @@ router.get('/', (req, res) => {
         .then(testprofessors => {
             res.json(testprofessors)
         })
+});
+
+router.post('/create', async (req, res) => {
+    const { name, department } = req.body;
+    const professor = new TestProfessor({ name, department });
+    const ret = await professor.save();
+    res.status(205);
+    res.json(ret);
 });
 
 module.exports = router;

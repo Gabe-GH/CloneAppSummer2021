@@ -43,12 +43,10 @@ const testprofessorSchema = new Schema(
         },
         overall: {
             type: Number,
-            required: true,
             default: 0.0
         },
         difficulty: {
             type: Number,
-            required: true,
             default: 0.0
         },
         classes: {
@@ -60,7 +58,8 @@ const testprofessorSchema = new Schema(
             default: undefined
         },
         bio: {
-            type: String
+            type: String,
+            default: 'Insert bio here'
         }
 
     },
