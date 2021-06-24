@@ -9,11 +9,11 @@ const Comment = require('../Mongo/Comments');
 
 const URI = require('../Mongo/config').URI;
 
-const commentsAPI = require('../Routes/API/professors');
+const professorsAPI = require('../Routes/API/professors');
 
 app.use(bodyParser.json());
 
-app.use('/comments', commentsAPI);
+app.use('/professors', professorsAPI);
 
 mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {

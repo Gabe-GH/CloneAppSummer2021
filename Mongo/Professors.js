@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { Decimal128 } = require('mongodb');
 const { model , Schema } = require('mongoose');
 
@@ -16,21 +17,18 @@ const classSchema = new Schema({
 
 const commentSchema = new Schema(
     {
-        quality: {
-            type: Decimal128,
+        commentQuality: {
+            type: Number,
             required: true,
             default: 0.0
         },
-        difficulty: {
-            type: Decimal128,
+        commentDifficulty: {
+            type: Number,
             required: true,
             default: 0.0
         },
-        class: {
-            classSchema,
-            required: true
-        },
-        date: {
+        commentClass: classSchema,
+        commentDate: {
             type: Date,
             required: true,
             default: Date.now
@@ -49,12 +47,12 @@ const professorSchema = new Schema(
             required: true
         },
         overall: {
-            type: Decimal128,
+            type: Number,
             required: true,
             default: 0.0
         },
         difficulty: {
-            type: Decimal128,
+            type: Number,
             required: true,
             default: 0.0
         },
