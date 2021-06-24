@@ -9,11 +9,11 @@ const Comment = require('../Mongo/Comments');
 
 const URI = require('../Mongo/config').URI;
 
-const comments = require('../Routes/API/comments');
+const commentsAPI = require('../Routes/API/professors');
 
 app.use(bodyParser.json());
 
-app.use('/comments', comments);
+app.use('/comments', commentsAPI);
 
 mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
@@ -21,16 +21,4 @@ mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true})
         return app.listen(port, () => {
             console.log(`Server started on port ${port}`);
         });
-    });
-
-
-
-
-// app.get('/', async (req, res) => {
-//     const comment = await Comment.find();
-//     res.json(comment);
-// });
-
-// app.listen(port, () => {
-//     console.log(`Server listening at port ${port}`);
-// })
+});
