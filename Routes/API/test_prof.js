@@ -19,7 +19,7 @@ router.post('/create', async (req, res) => {
     const { name, department } = req.body;
     const professor = new TestProfessor({ name, department });
     const ret = await professor.save();
-    res.status(205);
+    res.status(201);
     res.json(ret);
 });
 
