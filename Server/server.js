@@ -17,6 +17,11 @@ app.use(bodyParser.json());
 app.use('/professors', professorsAPI);
 app.use('/test', testAPI);
 
+app.get('/', (req, res) => {
+    res.status(202);
+    res.json("Connected to server");
+});
+
 // !!SWITCH TO DEV DB AFTER DONE TESTING
 // --current uri connected to test db
 (async () => {
@@ -27,5 +32,7 @@ app.use('/test', testAPI);
         app.emit("ready");
     });
 })();
+
+
 
 module.exports = app;
