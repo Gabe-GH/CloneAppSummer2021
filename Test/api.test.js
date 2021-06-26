@@ -22,6 +22,41 @@ describe("GET /", () => {
     });
 });
 
+
+// Tests if document reads all documents residing in collection
+describe("GET /test/", () => {
+    test("Should read all documents in collection", async() => {
+        const newProfessor = await createFiveEntries();
+        
+        const result = await request(app)
+        .get("/test/");
+        
+        const professors = await Professor.find();
+        //console.log(professors);
+        
+        expect(professors.length).toEqual(5);
+    });
+    
+    
+})
+
+// Tests if server calls document correctly through id
+describe("GET /test/:id", () => {
+    test("Should get document through id call", async () => {
+        const newProfessor = await createOneEntry();
+        const professor_result = await Professor.findOne({name: newProfessor.body.name});
+        
+        
+        console.log(professor_result._id);
+        
+        const server_result = await request(app)
+        .get(`/test/${professor_result._id}`);
+        
+        expect(professor_result._id.toString()).toStrictEqual(server_result.body._id);
+        expect(server_result.status).toBe(205);
+    });
+});
+
 // Tests return body of a POST request
 describe("POST /test/create", () => {
     test("Should return same data sent to db", async() => {
@@ -42,29 +77,13 @@ describe("POST /test/create", () => {
         
         // Searches for the professor in the database
         const professor = await Professor.findOne({name: 'testCase'});
+        //console.log(professor);
 
         //checks for document to be created in collection
         expect(professor.name).toBeTruthy();
         expect(professor.department).toBeTruthy();
     });
 });
-
-// Tests if document reads all documents residing in collection
-describe("GET /test/", () => {
-    test("Should read all documents in collection", async() => {
-        const newProfessor = await createFiveEntries();
-        
-        const result = await request(app)
-            .get("/test/");
-        
-        const professors = await Professor.find();
-        console.log(professors);
-
-        expect(professors.length).toEqual(5);
-    });
-
-
-})
 
 async function createFiveEntries() {
     let newProfessor;
@@ -83,14 +102,14 @@ async function createFiveEntries() {
     return newProfessor;
 }
 
-async function createOneEntry() {
+async function createOneEntry(name = "testCase") {
     let newProfessor;
 
     try{
         newProfessor = await request(app)
             .post("/test/create")
             .send({
-                name: "testCase",
+                name: name,
                 department: "testDept"
             });
 

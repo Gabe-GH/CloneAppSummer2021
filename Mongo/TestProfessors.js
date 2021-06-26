@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { ObjectID } = require('mongodb');
 const { Decimal128 } = require('mongodb');
 const { model , Schema } = require('mongoose');
 
@@ -62,8 +63,7 @@ const testprofessorSchema = new Schema(
             default: 'Insert bio here'
         }
 
-    },
-    { timestamps: true}
+    }
 );
 
 module.exports = TestProfessor = model('TestProfessor', testprofessorSchema, 'professors_test');

@@ -15,6 +15,20 @@ router.get('/', (req, res) => {
         })
 });
 
+
+// @route GET /test/:id
+// @desc Get item using id
+// @access Public
+
+router.get('/:id', (req,res) => {
+    id = req.params.id;
+    TestProfessor.findOne({_id: id})
+        .then(testprofessor => {
+            res.status(205)
+            res.json(testprofessor);
+        })
+})
+
 router.post('/create', async (req, res) => {
     const { name, department } = req.body;
     const professor = new TestProfessor({ name, department });
