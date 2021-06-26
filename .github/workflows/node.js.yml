@@ -23,13 +23,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
-      env:
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_TESTDB: ${{ secrets.DB_TESTDB }}
-        DB_DEVDB: ${{ secrets.DB_DEVDB }}
       with:
         node-version: ${{ matrix.node-version }}
+        process.env.DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        process.env.DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        process.env.DB_TESTDB: ${{ secrets.DB_TESTDB }}
+        process.env.DB_DEVDB: ${{ secrets.DB_DEVDB }}
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
