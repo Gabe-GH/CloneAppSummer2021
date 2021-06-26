@@ -1,6 +1,3 @@
-const URI_test = require('../Mongo/config').dev;
-const mongoose = require('mongoose');
-const http = require('http');
 const request = require("supertest");
 const app = require("../Server/server");
 const Professor = require("../Mongo/TestProfessors");
@@ -45,9 +42,6 @@ describe("GET /test/:id", () => {
     test("Should get document through id call", async () => {
         const newProfessor = await createOneEntry();
         const professor_result = await Professor.findOne({name: newProfessor.body.name});
-        
-        
-        console.log(professor_result._id);
         
         const server_result = await request(app)
         .get(`/test/${professor_result._id}`);
