@@ -46,9 +46,6 @@ describe("GET /test/:id", () => {
         const newProfessor = await createOneEntry();
         const professor_result = await Professor.findOne({name: newProfessor.body.name});
         
-        
-        console.log(professor_result._id);
-        
         const server_result = await request(app)
         .get(`/test/${professor_result._id}`);
         
