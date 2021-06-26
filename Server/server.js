@@ -23,8 +23,7 @@ app.get('/', (req, res) => {
     res.json("Connected to server");
 });
 
-// !!SWITCH TO DEV DB AFTER DONE TESTING
-// --current uri connected to test db
+
 (async () => {
     await mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
     console.log(`MongoDB Connected...`);
