@@ -24,10 +24,10 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       env:
-        process.env.DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        process.env.DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        process.env.DB_TESTDB: ${{ secrets.DB_TESTDB }}
-        process.env.DB_DEVDB: ${{ secrets.DB_DEVDB }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_TESTDB: ${{ secrets.DB_TESTDB }}
+        DB_DEVDB: ${{ secrets.DB_DEVDB }}
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
