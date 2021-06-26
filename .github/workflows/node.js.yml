@@ -18,6 +18,12 @@ jobs:
       matrix:
         node-version: [12.x, 14.x, 16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    
+    env:
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_TESTDB: ${{ secrets.DB_TESTDB }}
+      DB_DEVDB: ${{ secrets.DB_DEVDB }}
 
     steps:
     - uses: actions/checkout@v2
