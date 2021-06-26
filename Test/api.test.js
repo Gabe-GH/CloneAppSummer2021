@@ -1,6 +1,3 @@
-const URI_test = require('../Mongo/config').dev;
-const mongoose = require('mongoose');
-const http = require('http');
 const request = require("supertest");
 const app = require("../Server/server");
 const Professor = require("../Mongo/TestProfessors");

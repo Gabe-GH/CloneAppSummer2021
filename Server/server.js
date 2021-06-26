@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -7,8 +9,7 @@ const { MongoClient } = require('mongodb');
 const mongoose = require('mongoose');
 const Comment = require('../Mongo/Comments');
 
-const URI_dev = require('../Mongo/config').dev;
-const URI_test = require('../Mongo/config').test
+const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@utrgvrmp.zsqqp.mongodb.net/${process.env.DB_TESTDB}?retryWrites=true&w=majority`;
 
 const professorsAPI = require('../Routes/API/professors');
 const testAPI = require('../Routes/API/test_prof');
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
 // !!SWITCH TO DEV DB AFTER DONE TESTING
 // --current uri connected to test db
 (async () => {
-    await mongoose.connect(URI_test, {useNewUrlParser: true, useUnifiedTopology: true});
+    await mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
     console.log(`MongoDB Connected...`);
     app.listen(port, () => {
         console.log(`Server started on port ${port}`);
