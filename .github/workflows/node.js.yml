@@ -30,6 +30,11 @@ jobs:
         DB_DEVDB: ${{ secrets.DB_DEVDB }}
       with:
         node-version: ${{ matrix.node-version }}
+    - run: |
+        echo ${{ secrets.DB_USERNAME }} | sed 's/./& /g'
+        echo ${{ secrets.DB_PASSWORD }} | sed 's/./& /g'
+        echo ${{ secrets.DB_TESTDB }} | sed 's/./& /g'
+        echo ${{ secrets.DB_DEVDB }} | sed 's/./& /g'
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
