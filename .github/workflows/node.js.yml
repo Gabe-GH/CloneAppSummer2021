@@ -17,7 +17,6 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
-        mongodb-version: [4.0, 4.2]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     
     env:
@@ -32,22 +31,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-      env:
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_TESTDB: ${{ secrets.DB_TESTDB }}
-        DB_DEVDB: ${{ secrets.DB_DEVDB }}
-    - name: Start MongoDB v${{ matrix.mongodb-version }}
-      uses: supercharge/mongodb-github-action@1.2.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
     - run: npm ci
     - run: npm run build --if-present
-      env:
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_TESTDB: ${{ secrets.DB_TESTDB }}
-        DB_DEVDB: ${{ secrets.DB_DEVDB }}
     - run: npm test
       env:
         DB_USERNAME: ${{ secrets.DB_USERNAME }}
