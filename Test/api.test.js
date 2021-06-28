@@ -1,10 +1,29 @@
+const dotenv = require('dotenv');
+dotenv.config();
+const mongoose = require("mongoose");
 const request = require("supertest");
-const app = require("../Server/server");
+const app = require('../Server/app');
+
 const Professor = require("../Mongo/TestProfessors");
+const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@utrgvrmp.zsqqp.mongodb.net/${process.env.DB_TESTDB}?retryWrites=true&w=majority`
+
 
 afterEach(async() => {
-    await Professor.deleteMany();
-})
+    await Professor.deleteMany({}).exec(); 
+});
+
+beforeAll(async() => {
+    await mongoose.connect(
+        URI,
+        {useNewUrlParser: true,
+         useUnifiedTopology: true}
+    );
+    const db = mongoose.connection;
+});
+
+afterAll(async() => {
+    await mongoose.connection.close({});
+});
 
 // Test if server is responding correctly
 describe("GET /", () => {
@@ -15,7 +34,6 @@ describe("GET /", () => {
         // and a status of 202
         expect(serverResponse.body).toBe("Connected to server");
         expect(serverResponse.status).toBe(202);
-    
     });
 });
 
@@ -35,7 +53,7 @@ describe("GET /test/", () => {
     });
     
     
-})
+});
 
 // Tests if server calls document correctly through id
 describe("GET /test/:id", () => {
@@ -94,7 +112,7 @@ async function createFiveEntries() {
         return console.log(e);
     }
     return newProfessor;
-}
+};
 
 async function createOneEntry(name = "testCase") {
     let newProfessor;

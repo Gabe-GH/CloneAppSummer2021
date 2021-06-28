@@ -19,7 +19,6 @@ router.get('/', (req, res) => {
 // @route GET /test/:id
 // @desc Get item using id
 // @access Public
-
 router.get('/:id', (req,res) => {
     id = req.params.id;
     TestProfessor.findOne({_id: id})
@@ -29,6 +28,9 @@ router.get('/:id', (req,res) => {
         })
 })
 
+// @route POST /create
+// @desc Creates a new document and saves it to the db
+// @access Public
 router.post('/create', async (req, res) => {
     const { name, department } = req.body;
     const professor = new TestProfessor({ name, department });
