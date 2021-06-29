@@ -89,7 +89,6 @@ describe("POST /test/create", () => {
         
         // Searches for the professor in the database
         const professor = await Professor.findOne({name: 'testCase'});
-        //console.log(professor);
 
         //checks for document to be created in collection
         expect(professor.name).toBeTruthy();
