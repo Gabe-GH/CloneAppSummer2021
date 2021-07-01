@@ -1,6 +1,7 @@
 const express = require('express');
-const Professor = require('../../Mongo/TestProfessors');
+//const Professor = require('../../Mongo/TestProfessors');
 const router = express.Router();
+const mongoose = require("mongoose");
 
 // Test Model
 const TestProfessor = require('../../Mongo/TestProfessors');
@@ -10,6 +11,7 @@ const TestProfessor = require('../../Mongo/TestProfessors');
 // @access  Public
 router.get('/', (req, res) => {
     TestProfessor.find()
+        .exec()
         .then(testprofessors => {
             res.json(testprofessors)
         })
@@ -28,15 +30,48 @@ router.get('/:id', (req,res) => {
         })
 })
 
-// @route POST /create
+// @route POST /
 // @desc Creates a new document and saves it to the db
 // @access Public
-router.post('/create', async (req, res) => {
+router.post('/', async (req, res) => {
     const { name, department } = req.body;
     const professor = new TestProfessor({ name, department });
-    const ret = await professor.save();
-    res.status(201);
-    res.json(ret);
+    try {
+        const ret = await professor.save();
+        res.status(201);
+        res.json(ret);
+    } catch(e) {
+        res.status(506);
+        res.json({"error": e});
+    };
+});
+
+// @route POST /:id
+// @desc Updates a document and saves it to the db
+// @access Public
+router.post('/:id', async (req,res) => {
+    const id = req.params.id;
+    const { name, department } = req.body;
+    const updated_professor = await TestProfessor.findByIdAndUpdate(id, {name, department}, {new: true})
+    res.status(205);
+    res.json(updated_professor);
+});
+
+// @route DELETE /:id
+// @desc Removes a document from the db
+// @access Public
+router.delete('/:id', async(req,res) => {
+    const id = req.params.id;
+    const deletedProfessor = await TestProfessor.findOneAndDelete({_id: id})
+    const count = await TestProfessor.estimatedDocumentCount().exec();
+    console.log(count);
+    res.status(202);
+    res.json({
+        "message": "document deleted",
+        "_id": deletedProfessor._id,
+        "name": deletedProfessor.name,
+        "count": count
+    });
 });
 
 module.exports = router;
