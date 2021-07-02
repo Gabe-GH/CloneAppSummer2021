@@ -50,6 +50,7 @@ describe("GET /test", () => {
         //console.log(professors);
         
         expect(professors.length).toEqual(5);
+        expect(result.body.length).toEqual(5);
     });
     
     
@@ -153,6 +154,27 @@ describe("DELETE /test/:id", () => {
     });
 });
 
+// Tests proper server response when attempting to
+// access an empty collection
+describe("GET /test", () => {
+    test("Should receive an error message when accessing an empty collection", async() => {
+        await Professor.deleteMany({}).exec();
+        const professors = await Professor.find();
+        expect(professors.length).toEqual(0);
+        
+        const result = await request(app)
+        .get("/test");
+
+        expect(result.body.message).toBeTruthy();
+        expect(result.body.message).toEqual("The collection is reporting empty!");
+        expect(result.body.count).toEqual(0);
+        expect(result.status).toBe(404);
+    });
+});
+
+
+
+// Functions for DRY
 async function createFiveEntries() {
     let newProfessor;
     try {

@@ -9,12 +9,24 @@ const TestProfessor = require('../../Mongo/TestProfessors');
 // @route   GET api/items
 // @desc    Get all items
 // @access  Public
-router.get('/', (req, res) => {
-    TestProfessor.find()
-        .exec()
-        .then(testprofessors => {
-            res.json(testprofessors)
+router.get('/', async (req, res) => {
+    const count = await TestProfessor.estimatedDocumentCount().exec();
+
+    if(count){
+        TestProfessor.find()
+            .exec()
+            .then(testprofessors => {
+                res.status(202);
+                res.json(testprofessors)
+            })
+    }
+    else{
+        res.status(404);
+        res.json({
+            "message": `The collection is reporting empty!`,
+            "count": count
         })
+    }
 });
 
 
