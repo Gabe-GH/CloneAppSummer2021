@@ -206,6 +206,90 @@ describe("GET /test/:id", () => {
     });
 });
 
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with no fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with no fields passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({});
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only name field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({name: "name1"});
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only name and department field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({
+                name: "name1",
+                department: "department1"
+            });
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only name and email field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({
+                name: "name1",
+                email: "email1"
+            });
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only department and email field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({
+                department: "department1",
+                email: "email1"
+            });
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
 
 // **********
 //  FUNCTIONS
@@ -215,18 +299,19 @@ describe("GET /test/:id", () => {
 async function createFiveEntries() {
     let newProfessor;
     try {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 1; i <= 5; i++) {
             newProfessor = await request(app)
                 .post("/test")
                 .send({
                     name: "testCase" + i,
+                    email: `email${i}@email.com`,
                     department: "testDept" + i
                 });
         };
-        return newProfessor;
     } catch(e) {
         return console.log(e);
     }
+    return newProfessor;
 };
 
 async function createOneEntry(name = "testCase") {
@@ -237,6 +322,7 @@ async function createOneEntry(name = "testCase") {
             .post("/test")
             .send({
                 name: name,
+                email: "email@email.com",
                 department: "testDept"
             });
 

@@ -6,11 +6,14 @@ const { model , Schema } = require('mongoose');
 const classSchema = new Schema({
     classDepartment: {
         type: String, 
-        default: 'CSCI'
+        default: 'CSCI',
+        trim: true
     },
     classSection: {
         type: Number,
-        default: 1000
+        default: 1000,
+        min: 1000,
+        max: 9999
     }
 })
 
@@ -18,11 +21,16 @@ const commentSchema = new Schema(
     {
         commentQuality: {
             type: Number,
-            default: 0.0
+            default: 0.0,
+            min: 0.0,
+            max: 5.0
         },
         commentDifficulty: {
             type: Number,
-            default: 0.0
+            default: 0.0,
+            min: 0.0,
+            max: 5.0
+
         },
         commentClass: classSchema,
         commentDate: {
@@ -36,19 +44,31 @@ const testprofessorSchema = new Schema(
     {
         name: {
             type: String,
-            required: true
+            required: true,
+            trim: true
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true
         },
         department: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         overall: {
             type: Number,
-            default: 0.0
+            default: 0.0,
+            min: 0.0,
+            max: 5.0
         },
         difficulty: {
             type: Number,
-            default: 0.0
+            default: 0.0,
+            min: 0.0,
+            max: 5.0
         },
         classes: {
             type: [classSchema],
@@ -60,9 +80,14 @@ const testprofessorSchema = new Schema(
         },
         bio: {
             type: String,
-            default: 'Insert bio here'
+            default: 'Insert bio here',
+            trim: true
         }
-
+    },
+    { 
+        minimize: false,
+        strict: true,
+        strictQuery: true
     }
 );
 

@@ -43,7 +43,6 @@ router.get('/', async (req, res) => {
 // @route GET /test/:id
 // @desc Get item using id
 // @access Public
-
 router.get('/:id', async (req,res) => {
     const id = req.params.id;
 
@@ -52,11 +51,11 @@ router.get('/:id', async (req,res) => {
         if(testprofessor) res.status(205).json(testprofessor);
         else res.status(404).json({
             "message": "Document not found",
-            "error": "none"
+            "error": "Document not found in collection"
         });
     } catch(e) {
-        return res.status(404).json({
-            "message": "Document not found",
+        return res.status(500).json({
+            "message": "Unexpected Error",
             "error": e
         });
     };
@@ -67,15 +66,15 @@ router.get('/:id', async (req,res) => {
 // @desc Creates a new document and saves it to the db
 // @access Public
 router.post('/', async (req, res) => {
-    const { name, department } = req.body;
-    const professor = new TestProfessor({ name, department });
+    const { name, email, department } = req.body;
+    const professor = new TestProfessor({ name, email, department });
     try {
         const ret = await professor.save();
         res.status(201);
         res.json(ret);
     } catch(e) {
-        res.status(506);
-        res.json({"error": e});
+        res.status(400);
+        res.json(e);
     };
 });
 
@@ -105,5 +104,7 @@ router.delete('/:id', async(req,res) => {
         "count": count
     });
 });
+
+
 
 module.exports = router;
