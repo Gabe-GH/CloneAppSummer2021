@@ -7,11 +7,6 @@ const app = require('../Server/app');
 const Professor = require("../Mongo/TestProfessors");
 const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@utrgvrmp.zsqqp.mongodb.net/${process.env.DB_TESTDB}?retryWrites=true&w=majority`
 
-
-afterEach(async() => {
-    await Professor.deleteMany({}).exec(); 
-});
-
 beforeAll(async() => {
     await mongoose.connect(
         URI,
@@ -20,6 +15,11 @@ beforeAll(async() => {
     );
     const db = mongoose.connection;
 });
+
+afterEach(async() => {
+    await Professor.deleteMany({}).exec(); 
+});
+
 
 afterAll(async() => {
     await mongoose.connection.close({});
@@ -192,7 +192,6 @@ describe("GET /test/:id", () => {
 
         const professor_id = newProfessor.body._id;
         expect(professor_id).toBeTruthy();
-        console.log(professor_id);
 
         await Professor.deleteMany({}).exec();
         professors = await Professor.find();
@@ -308,10 +307,10 @@ async function createFiveEntries() {
                     department: "testDept" + i
                 });
         };
+        return newProfessor;
     } catch(e) {
         return console.log(e);
     }
-    return newProfessor;
 };
 
 async function createOneEntry(name = "testCase") {
