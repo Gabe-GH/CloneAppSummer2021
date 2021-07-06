@@ -2,6 +2,7 @@ const express = require('express');
 //const Professor = require('../../Mongo/TestProfessors');
 const router = express.Router();
 const mongoose = require("mongoose");
+const TestProfessors = require('../../Mongo/TestProfessors');
 
 // Test Model
 const TestProfessor = require('../../Mongo/TestProfessors');
@@ -10,22 +11,31 @@ const TestProfessor = require('../../Mongo/TestProfessors');
 // @desc    Get all items
 // @access  Public
 router.get('/', async (req, res) => {
-    const count = await TestProfessor.estimatedDocumentCount().exec();
+    try{
+        const count = await TestProfessor.estimatedDocumentCount().exec();
 
-    if(count){
-        TestProfessor.find()
-            .exec()
-            .then(testprofessors => {
-                res.status(202);
-                res.json(testprofessors)
+        if (count) {
+            TestProfessor.find()
+                .exec()
+                .then(testprofessors => {
+                    res.status(202);
+                    res.json(testprofessors)
+                })
+        }
+        else {
+            res.status(404);
+            res.json({
+                "message": `The collection is reporting empty!`,
+                "count": count,
+                "error": "none"
             })
-    }
-    else{
-        res.status(404);
+        }
+    } catch(e){
+        res.status(500);
         res.json({
-            "message": `The collection is reporting empty!`,
-            "count": count
-        })
+            "message": "Unexpected Error",
+            "error": e
+        });
     }
 });
 
@@ -33,14 +43,25 @@ router.get('/', async (req, res) => {
 // @route GET /test/:id
 // @desc Get item using id
 // @access Public
-router.get('/:id', (req,res) => {
-    id = req.params.id;
-    TestProfessor.findOne({_id: id})
-        .then(testprofessor => {
-            res.status(205)
-            res.json(testprofessor);
-        })
-})
+
+router.get('/:id', async (req,res) => {
+    const id = req.params.id;
+
+    try{
+        const testprofessor = await TestProfessor.findById(id).exec();
+        if(testprofessor) res.status(205).json(testprofessor);
+        else res.status(404).json({
+            "message": "Document not found",
+            "error": "none"
+        });
+    } catch(e) {
+        return res.status(404).json({
+            "message": "Document not found",
+            "error": e
+        });
+    };
+
+});
 
 // @route POST /
 // @desc Creates a new document and saves it to the db
@@ -76,7 +97,6 @@ router.delete('/:id', async(req,res) => {
     const id = req.params.id;
     const deletedProfessor = await TestProfessor.findOneAndDelete({_id: id})
     const count = await TestProfessor.estimatedDocumentCount().exec();
-    console.log(count);
     res.status(202);
     res.json({
         "message": "document deleted",
