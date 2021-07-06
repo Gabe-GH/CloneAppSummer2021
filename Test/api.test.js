@@ -25,6 +25,10 @@ afterAll(async() => {
     await mongoose.connection.close({});
 });
 
+// ************
+// HAPPY PATHS
+// ************
+
 // Test if server is responding correctly
 describe("GET /", () => {
     test("Should be connected to server", async() => {
@@ -127,6 +131,8 @@ describe("POST /test/:id", () => {
     });
 });
 
+
+// Tests deleting a document from the collection
 describe("DELETE /test/:id", () => {
     test("Should delete a professor from the database", async() => {
 
@@ -154,6 +160,10 @@ describe("DELETE /test/:id", () => {
     });
 });
 
+// *************
+//  ERROR TESTS 
+// *************
+
 // Tests proper server response when attempting to
 // access an empty collection
 describe("GET /test", () => {
@@ -172,17 +182,129 @@ describe("GET /test", () => {
     });
 });
 
+// Tests proper server response when attempting to acces
+// a nonexistent doc by id
+describe("GET /test/:id", () => {
+    test("Should receive an error message when accessing a nonexistent document in collection", async() => {
+        const newProfessor = await createOneEntry();
+        let professors = await Professor.find();
+        expect(professors.length).toEqual(1);
+
+        const professor_id = newProfessor.body._id;
+        expect(professor_id).toBeTruthy();
+        console.log(professor_id);
+
+        await Professor.deleteMany({}).exec();
+        professors = await Professor.find();
+        expect(professors.length).toEqual(0);
+
+        const result = await request(app)
+        .get(`/test/${professor_id}`);
+        expect(result.body).toBeTruthy();
+        expect(result.body.message).toEqual("Document not found");
+        expect(result.status).toBe(404);
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with no fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with no fields passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({});
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only name field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({name: "name1"});
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only name and department field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({
+                name: "name1",
+                department: "department1"
+            });
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only name and email field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({
+                name: "name1",
+                email: "email1"
+            });
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to save an unvalidated schema doc
+// with only partial fields sent to server
+describe("POST /test", () => {
+    test("Should receive an error when attempting to create a document with only department and email field passed", async() => {
+        newProfessor = await request(app)
+            .post("/test")
+            .send({
+                department: "department1",
+                email: "email1"
+            });
+        
+        expect(newProfessor.body).toBeTruthy();
+        expect(newProfessor.body.errors).toBeTruthy();
+        expect(400)
+    });
+});
 
 
-// Functions for DRY
+// **********
+//  FUNCTIONS
+// **********
+
+// Functions for DRY methods
 async function createFiveEntries() {
     let newProfessor;
     try {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 1; i <= 5; i++) {
             newProfessor = await request(app)
                 .post("/test")
                 .send({
                     name: "testCase" + i,
+                    email: `email${i}@email.com`,
                     department: "testDept" + i
                 });
         };
@@ -200,6 +322,7 @@ async function createOneEntry(name = "testCase") {
             .post("/test")
             .send({
                 name: name,
+                email: "email@email.com",
                 department: "testDept"
             });
 
