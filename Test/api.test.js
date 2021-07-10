@@ -321,6 +321,34 @@ describe("POST /test/:id", () => {
     });
 });
 
+// Tests returning an error status when attempting
+// to delete a nonexistent document from the collection
+
+describe("DELETE /test/:id", () => {
+    test("Should receive an error when attempting to delete a nonexistent document from the collection", async() => {
+
+        //  Model Prep
+        const newProfessor = await createOneEntry();
+        let professors = await Professor.find();
+        expect(professors.length).toEqual(1);
+
+        const professor_id= newProfessor.body._id;
+        expect(professor_id).toBeTruthy();
+
+        await Professor.deleteMany({}).exec();
+        professors = await Professor.find();
+        expect(professors.length).toEqual(0);
+
+        // Action on server
+        const server_result = await request(app)
+            .delete(`/test/${professor_id}`);
+
+        expect(server_result.body).toBeTruthy();
+        expect(server_result.body.Error).toBeTruthy();
+        expect(server_result.status).toEqual(404);
+    })
+})
+
 
 // **********
 //  FUNCTIONS

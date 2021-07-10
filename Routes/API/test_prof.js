@@ -36,7 +36,7 @@ router.get('/:id', async(req,res) => {
     try{
         const testProfessor = await TestProfessor.findById(id).exec();
         
-        if(!testProfessor) throw new Error(`Document with ${id} could not be found`);
+        if(!testProfessor) throw new Error(`Document with _id: ${id} could not be found`);
         res.status(200)
         res.json(testProfessor);
     } catch(e) {
@@ -70,7 +70,7 @@ router.post('/:id', async (req,res) => {
     try{
         const updated_professor = await TestProfessor.findByIdAndUpdate(id, {name, department, email}, {new: true});
         
-        if (!updated_professor) throw new Error(`Document with ${id} could not be found`);
+        if (!updated_professor) throw new Error(`Document with _id: ${id} could not be found`);
         
         res.status(201);
         res.json(updated_professor);
@@ -85,15 +85,22 @@ router.post('/:id', async (req,res) => {
 // @access Public
 router.delete('/:id', async(req,res) => {
     const id = req.params.id;
-    const deletedProfessor = await TestProfessor.findOneAndDelete({_id: id})
-    const count = await TestProfessor.estimatedDocumentCount().exec();
-    res.status(202);
-    res.json({
-        "message": "document deleted",
-        "_id": deletedProfessor._id,
-        "name": deletedProfessor.name,
-        "count": count
-    });
+    try {
+        const deletedProfessor = await TestProfessor.findOneAndDelete({_id: id});
+        if(!deletedProfessor) throw new Error(`Document with _id: ${id} could not be found`);
+        
+        const count = await TestProfessor.estimatedDocumentCount().exec();
+        res.status(202);
+        res.json({
+            "message": "document deleted",
+            "_id": deletedProfessor._id,
+            "name": deletedProfessor.name,
+            "count": count
+        });
+    } catch(e){
+        res.status(404);
+        res.json({"Error": e.message});
+    };
 });
 
 module.exports = router;
