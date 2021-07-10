@@ -34,10 +34,8 @@ describe("GET /", () => {
     test("Should be connected to server", async() => {
         const serverResponse = await request(app).get("/");
         
-        // checks if response body includes connection string
-        // and a status of 202
-        expect(serverResponse.body).toBe("Connected to server");
-        expect(serverResponse.status).toBe(202);
+        // checks for a status of 204
+        expect(serverResponse.status).toBe(204);
     });
 });
 
@@ -55,6 +53,7 @@ describe("GET /test", () => {
         
         expect(professors.length).toEqual(5);
         expect(result.body.length).toEqual(5);
+        expect(result.status).toBe(200);
     });
     
     
@@ -69,7 +68,7 @@ describe("GET /test/:id", () => {
         .get(`/test/${newProfessor.body._id}`);
         
         expect(newProfessor.body._id.toString()).toStrictEqual(server_result.body._id);
-        expect(server_result.status).toBe(205);
+        expect(server_result.status).toBe(200);
     });
 });
 
@@ -81,7 +80,7 @@ describe("POST /test", () => {
         // checks for name in res.body just sent to match
         // for a status of 201
         expect(newProfessor.body.name).toBe("testCase");
-        expect(newProfessor.statusCode).toBe(201);
+        expect(newProfessor.status).toBe(201);
 
     });
 });
@@ -123,6 +122,7 @@ describe("POST /test/:id", () => {
         expect(server_result.body).toBeTruthy();
         expect(server_result.body.name).toEqual(updateData.name);
         expect(server_result.body.department).toEqual(updateData.department);
+        expect(server_result.status).toEqual(201);
 
         expect(db_professor).toBeTruthy();
         expect(db_professor.name).toEqual(server_result.body.name);
@@ -175,9 +175,7 @@ describe("GET /test", () => {
         const result = await request(app)
         .get("/test");
 
-        expect(result.body.message).toBeTruthy();
-        expect(result.body.message).toEqual("The collection is reporting empty!");
-        expect(result.body.count).toEqual(0);
+        expect(result.body.Error).toBeTruthy();
         expect(result.status).toBe(404);
     });
 });
@@ -198,9 +196,10 @@ describe("GET /test/:id", () => {
         expect(professors.length).toEqual(0);
 
         const result = await request(app)
-        .get(`/test/${professor_id}`);
+            .get(`/test/${professor_id}`);
+
         expect(result.body).toBeTruthy();
-        expect(result.body.message).toEqual("Document not found");
+        expect(result.body.Error).toBeTruthy();
         expect(result.status).toBe(404);
     });
 });
@@ -286,6 +285,39 @@ describe("POST /test", () => {
         expect(newProfessor.body).toBeTruthy();
         expect(newProfessor.body.errors).toBeTruthy();
         expect(400)
+    });
+});
+
+// Tests returning an error status when
+// attempting to update a document not saved
+// to the database
+describe("POST /test/:id", () => {
+    test("Should receive an error when attempting to update a nonexistent document in the collection", async() => {
+        
+        //  Model Prep
+        const newProfessor = await createOneEntry();
+        let professors = await Professor.find();
+        expect(professors.length).toEqual(1);
+
+        const professor_id= newProfessor.body._id;
+        expect(professor_id).toBeTruthy();
+
+        await Professor.deleteMany({}).exec();
+        professors = await Professor.find();
+        expect(professors.length).toEqual(0);
+
+        // Action on server
+        const server_result = await request(app)
+            .post(`/test/${professor_id}`)
+            .send({
+                name: "Updated Name",
+                email: "updated Email",
+                department: "Updated Dept"
+            });
+        
+        expect(server_result.body).toBeTruthy();
+        expect(server_result.body.Error).toBeTruthy();
+        expect(server_result.status).toEqual(404);
     });
 });
 
