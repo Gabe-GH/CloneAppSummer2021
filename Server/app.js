@@ -15,7 +15,7 @@ app.use('/test', testAPI);
 
 // Root
 app.get('/', (req,res) => {
-    res.status(202).json("Connected to server");
+    res.status(204).json("Connected to server");
 });
 
 

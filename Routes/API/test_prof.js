@@ -2,6 +2,7 @@ const express = require('express');
 //const Professor = require('../../Mongo/TestProfessors');
 const router = express.Router();
 const mongoose = require("mongoose");
+const { count } = require('../../Mongo/TestProfessors');
 const TestProfessors = require('../../Mongo/TestProfessors');
 
 // Test Model
@@ -10,56 +11,38 @@ const TestProfessor = require('../../Mongo/TestProfessors');
 // @route   GET api/items
 // @desc    Get all items
 // @access  Public
-router.get('/', async (req, res) => {
+router.get('/', async(req,res) => {
     try{
         const count = await TestProfessor.estimatedDocumentCount().exec();
+        if (count == 0) throw new Error(`${count} documents reported in collection`);
 
-        if (count) {
-            TestProfessor.find()
-                .exec()
-                .then(testprofessors => {
-                    res.status(202);
-                    res.json(testprofessors)
-                })
-        }
-        else {
-            res.status(404);
-            res.json({
-                "message": `The collection is reporting empty!`,
-                "count": count,
-                "error": "none"
-            })
-        }
-    } catch(e){
-        res.status(500);
-        res.json({
-            "message": "Unexpected Error",
-            "error": e
-        });
+        TestProfessor.find().exec()
+            .then(testprofessors => {
+                res.status(200);
+                res.json(testprofessors);
+            });
+    } catch(e) {
+        res.status(404);
+        res.json({ "Error": e.message });
     }
-});
+})
 
 
 // @route GET /test/:id
 // @desc Get item using id
 // @access Public
-router.get('/:id', async (req,res) => {
+router.get('/:id', async(req,res) => {
     const id = req.params.id;
-
     try{
-        const testprofessor = await TestProfessor.findById(id).exec();
-        if(testprofessor) res.status(205).json(testprofessor);
-        else res.status(404).json({
-            "message": "Document not found",
-            "error": "Document not found in collection"
-        });
+        const testProfessor = await TestProfessor.findById(id).exec();
+        
+        if(!testProfessor) throw new Error(`Document with ${id} could not be found`);
+        res.status(200)
+        res.json(testProfessor);
     } catch(e) {
-        return res.status(500).json({
-            "message": "Unexpected Error",
-            "error": e
-        });
+        res.status(404);
+        res.json({"Error": e.message}); 
     };
-
 });
 
 // @route POST /
@@ -83,10 +66,18 @@ router.post('/', async (req, res) => {
 // @access Public
 router.post('/:id', async (req,res) => {
     const id = req.params.id;
-    const { name, department } = req.body;
-    const updated_professor = await TestProfessor.findByIdAndUpdate(id, {name, department}, {new: true})
-    res.status(205);
-    res.json(updated_professor);
+    const { name, email, department } = req.body;
+    try{
+        const updated_professor = await TestProfessor.findByIdAndUpdate(id, {name, department, email}, {new: true});
+        
+        if (!updated_professor) throw new Error(`Document with ${id} could not be found`);
+        
+        res.status(201);
+        res.json(updated_professor);
+    }catch(e) {
+        res.status(404);
+        res.json({"Error": e.message});
+    }
 });
 
 // @route DELETE /:id
@@ -104,7 +95,5 @@ router.delete('/:id', async(req,res) => {
         "count": count
     });
 });
-
-
 
 module.exports = router;
