@@ -5,7 +5,8 @@ const request = require("supertest");
 const app = require('../Server/app');
 
 const Professor = require("../Mongo/TestProfessors");
-const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@utrgvrmp.zsqqp.mongodb.net/${process.env.DB_TESTDB}?retryWrites=true&w=majority`
+const URI = process.env.DB_TEST;
+
 
 beforeAll(async() => {
     await mongoose.connect(
