@@ -2,3 +2,4 @@ config.js
 settings.json
 .env
 coverage/
+node_modules/
