@@ -2,8 +2,6 @@ const express = require('express');
 //const Professor = require('../../Mongo/TestProfessors');
 const router = express.Router();
 const mongoose = require("mongoose");
-const { count } = require('../../Mongo/TestProfessors');
-const TestProfessors = require('../../Mongo/TestProfessors');
 
 // Test Model
 const TestProfessor = require('../../Mongo/TestProfessors');
