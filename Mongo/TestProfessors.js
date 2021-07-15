@@ -1,6 +1,3 @@
-const { ObjectId } = require('mongodb');
-const { ObjectID } = require('mongodb');
-const { Decimal128 } = require('mongodb');
 const { model , Schema } = require('mongoose');
 
 const classSchema = new Schema({
