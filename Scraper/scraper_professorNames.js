@@ -8,17 +8,28 @@ const puppeteer = require('puppeteer');
     
     await page.goto(UTRGVstaff_URL);
 
+    let department = await page.$eval("h1.department-title", 
+        department => department.innerText.trim());
+
     const names = await page.$$eval("div.listing p strong",
-        elements => elements.map(names => names.textContent));
+        elements => elements.map(names => names.textContent.trim()));
     
     const emails = await page.$$eval("div.listing p a:last-child",
-        elements => elements.map(emails => emails.textContent));
+        elements => elements.map(emails => emails.textContent.trim()));
     
-    
-        
+    department = department.split("\n")[0]     
+    browser.close();
+
+    console.log(department);
     console.log(names);
     console.log(emails);
+
+    const results = [];
     
-    browser.close();
+    for(let i = 0; i < names.length || i < emails.length; i++){
+        results.push( { department: department, name: names[i], email: emails[i]});
+    };
+
+    console.log(results)
     
 })();
