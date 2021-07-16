@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 (async () => {
     // mongodb authenticaition
-    const URI = (process.env.NODE_ENV == "test") ? process.env.DB_TEST : process.env.DB_DEV
+    const URI = (process.env.NODE_ENV == "test_env") ? process.env.DB_TEST : process.env.DB_DEV
     
     // mongo connection
     await mongoose.connect(URI,{useNewUrlParser: true, useUnifiedTopology: true}, () => {
