@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 
-(async() => {
+async function getCSCIProfessorData() {
     const UTRGVstaff_URL = `https://www.utrgv.edu/csci/faculty/index.htm`
 
     const browser = await puppeteer.launch()
@@ -20,16 +20,14 @@ const puppeteer = require('puppeteer');
     department = department.split("\n")[0]     
     browser.close();
 
-    console.log(department);
-    console.log(names);
-    console.log(emails);
-
     const results = [];
     
     for(let i = 0; i < names.length || i < emails.length; i++){
         results.push( { department: department, name: names[i], email: emails[i]});
     };
 
-    console.log(results)
-    
-})();
+    return results
+
+};
+
+module.exports = getCSCIProfessorData;
