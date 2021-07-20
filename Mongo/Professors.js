@@ -69,11 +69,11 @@ const professorSchema = new Schema(
         },
         classes: {
             type: [classSchema],
-            default: undefined
+            default: []
         },
         comments: {
             type: [commentSchema],
-            default: undefined
+            default: []
         },
         bio: {
             type: String,
