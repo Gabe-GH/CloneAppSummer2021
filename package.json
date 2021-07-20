@@ -22,6 +22,7 @@
     "supertest": "^6.1.3"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/Scraper/"]
   }
 }
