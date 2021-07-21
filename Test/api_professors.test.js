@@ -46,7 +46,7 @@ describe("GET /", () => {
 
 
 // Tests if document reads all documents residing in collection
-describe("GET /test", () => {
+describe("GET /professors", () => {
     test("Should read all documents in collection", async() => {
         const newProfessor = await createFiveEntries();
         
@@ -65,7 +65,7 @@ describe("GET /test", () => {
 });
 
 // Tests if server calls document correctly through id
-describe("GET /test/:id", () => {
+describe("GET /professors/:id", () => {
     test("Should get document through id call", async () => {
         const newProfessor = await createOneEntry();
         
@@ -78,7 +78,7 @@ describe("GET /test/:id", () => {
 });
 
 // Tests return body of a POST request
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should return same data sent to db", async() => {
         const newProfessor = await createOneEntry();
 
@@ -92,7 +92,7 @@ describe("POST /test", () => {
 
 
 // Tests saving a Professor to collection
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should save a professor to database", async () => {
         const newProfessor = await createOneEntry();
         
@@ -106,7 +106,7 @@ describe("POST /test", () => {
 });
 
 // Tests updating a professor in collection
-describe("POST /test/:id", () => {
+describe("POST /professors/:id", () => {
     test("Should update a professor in database", async () => {
         const newProfessor = await createOneEntry();
 
@@ -138,7 +138,7 @@ describe("POST /test/:id", () => {
 
 
 // Tests deleting a document from the collection
-describe("DELETE /test/:id", () => {
+describe("DELETE /professors/:id", () => {
     test("Should delete a professor from the database", async() => {
 
         const newProfessors = await createFiveEntries();
@@ -171,7 +171,7 @@ describe("DELETE /test/:id", () => {
 
 // Tests proper server response when attempting to
 // access an empty collection
-describe("GET /test", () => {
+describe("GET /professors", () => {
     test("Should receive an error message when accessing an empty collection", async() => {
         await Professor.deleteMany({}).exec();
         const professors = await Professor.find();
@@ -187,7 +187,7 @@ describe("GET /test", () => {
 
 // Tests proper server response when attempting to acces
 // a nonexistent doc by id
-describe("GET /test/:id", () => {
+describe("GET /professors/:id", () => {
     test("Should receive an error message when accessing a nonexistent document in collection", async() => {
         const newProfessor = await createOneEntry();
         let professors = await Professor.find();
@@ -212,7 +212,7 @@ describe("GET /test/:id", () => {
 // Tests returning an error status when
 // attempting to save an unvalidated schema doc
 // with no fields sent to server
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should receive an error when attempting to create a document with no fields passed", async() => {
         newProfessor = await request(app)
             .post("/professors")
@@ -227,7 +227,7 @@ describe("POST /test", () => {
 // Tests returning an error status when
 // attempting to save an unvalidated schema doc
 // with only partial fields sent to server
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should receive an error when attempting to create a document with only name field passed", async() => {
         newProfessor = await request(app)
             .post("/professors")
@@ -242,7 +242,7 @@ describe("POST /test", () => {
 // Tests returning an error status when
 // attempting to save an unvalidated schema doc
 // with only partial fields sent to server
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should receive an error when attempting to create a document with only name and department field passed", async() => {
         newProfessor = await request(app)
             .post("/professors")
@@ -260,7 +260,7 @@ describe("POST /test", () => {
 // Tests returning an error status when
 // attempting to save an unvalidated schema doc
 // with only partial fields sent to server
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should receive an error when attempting to create a document with only name and email field passed", async() => {
         newProfessor = await request(app)
             .post("/professors")
@@ -278,7 +278,7 @@ describe("POST /test", () => {
 // Tests returning an error status when
 // attempting to save an unvalidated schema doc
 // with only partial fields sent to server
-describe("POST /test", () => {
+describe("POST /professors", () => {
     test("Should receive an error when attempting to create a document with only department and email field passed", async() => {
         newProfessor = await request(app)
             .post("/professors")
@@ -296,7 +296,7 @@ describe("POST /test", () => {
 // Tests returning an error status when
 // attempting to update a document not saved
 // to the database
-describe("POST /test/:id", () => {
+describe("POST /professors/:id", () => {
     test("Should receive an error when attempting to update a nonexistent document in the collection", async() => {
         
         //  Model Prep
@@ -329,7 +329,7 @@ describe("POST /test/:id", () => {
 // Tests returning an error status when attempting
 // to delete a nonexistent document from the collection
 
-describe("DELETE /test/:id", () => {
+describe("DELETE /professors/:id", () => {
     test("Should receive an error when attempting to delete a nonexistent document from the collection", async() => {
 
         //  Model Prep
