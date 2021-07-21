@@ -13,10 +13,7 @@ beforeAll(async() => {
     await mongoose.connect(
         URI,
         {useNewUrlParser: true,
-         useUnifiedTopology: true,
-         useFindAndModify: false,
-         useCreateIndex: true
-        }
+         useUnifiedTopology: true}
     );
     const db = mongoose.connection;
 });

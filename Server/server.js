@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
     const URI = (process.env.NODE_ENV == "test_env") ? process.env.DB_TEST : process.env.DB_DEV
     
     // mongo connection
-    await mongoose.connect(URI,{useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true}, () => {
+    await mongoose.connect(URI,{useNewUrlParser: true, useUnifiedTopology: true}, () => {
         db = mongoose.connection;
         console.log(`Connected to MongoDB`)
         
