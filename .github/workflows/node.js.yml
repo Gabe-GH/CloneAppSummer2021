@@ -23,6 +23,8 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_TESTDB: ${{ secrets.DB_TESTDB }}
       DB_DEVDB: ${{ secrets.DB_DEVDB }}
+      DB_TEST: ${{ secrets.DB_TEST }}
+      DB_DEV: ${{ secrets.DB_DEV }}
 
     steps:
     - uses: actions/checkout@v2
@@ -38,4 +40,6 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_TESTDB: ${{ secrets.DB_TESTDB }}
         DB_DEVDB: ${{ secrets.DB_DEVDB }}
+        DB_TEST: ${{ secrets.DB_TEST }}
+        DB_DEV: ${{ secrets.DB_DEV }}
     
