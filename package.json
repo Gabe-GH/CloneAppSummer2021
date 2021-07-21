@@ -14,7 +14,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
     "mongoose": "^5.12.14",
-    "nodemon": "^2.0.9",
+    "nodemon": "^2.0.12",
     "puppeteer": "^10.1.0"
   },
   "devDependencies": {
@@ -23,6 +23,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/Scraper/"]
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/Scraper/"
+    ]
   }
 }
