@@ -59,8 +59,6 @@ describe("GET /test", () => {
         expect(result.body.length).toEqual(5);
         expect(result.status).toBe(200);
     });
-    
-    
 });
 
 // Tests if server calls document correctly through id
